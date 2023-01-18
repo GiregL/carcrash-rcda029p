@@ -4,12 +4,16 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="`user`")
+ * 
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -29,10 +33,9 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50, options= {"default": "COMMERCIAL"})
-     *
+     * @ORM\Column(type="json")
      */
-    private $role;
+    private $roles = [];
 
     /**
      * @ORM\OneToOne(targetEntity=Profil::class, inversedBy="user", cascade={"persist", "remove"})
@@ -68,14 +71,14 @@ class User
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): ?array
     {
-        return $this->role;
+        return $this->roles;
     }
 
     public function setRole(string $role): self
     {
-        $this->role = $role;
+        $this->roles = $role;
 
         return $this;
     }
@@ -91,4 +94,52 @@ class User
 
         return $this;
     }
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+        /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
 }
+
