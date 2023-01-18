@@ -1,3 +1,5 @@
+.idea
+.fleet
 
 ###> symfony/framework-bundle ###
 /.env.local
