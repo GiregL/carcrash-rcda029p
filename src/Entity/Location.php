@@ -27,6 +27,18 @@ class Location
      */
     private $dateFin;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="locations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $client;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Voiture::class, inversedBy="locations")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $voiture;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +64,30 @@ class Location
     public function setDateFin(\DateTimeInterface $dateFin): self
     {
         $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): self
+    {
+        $this->client = $client;
+
+        return $this;
+    }
+
+    public function getVoiture(): ?Voiture
+    {
+        return $this->voiture;
+    }
+
+    public function setVoiture(?Voiture $voiture): self
+    {
+        $this->voiture = $voiture;
 
         return $this;
     }

@@ -29,9 +29,15 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options= {"default": "COMMERCIAL"})
+     *
      */
     private $role;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Profil::class, inversedBy="user", cascade={"persist", "remove"})
+     */
+    private $profil;
 
     public function getId(): ?int
     {
@@ -70,6 +76,18 @@ class User
     public function setRole(string $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getProfil(): ?Profil
+    {
+        return $this->profil;
+    }
+
+    public function setProfil(Profil $profil): self
+    {
+        $this->profil = $profil;
 
         return $this;
     }

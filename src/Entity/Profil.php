@@ -42,6 +42,11 @@ class Profil
      */
     private $dateNaissance;
 
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, mappedBy="profil", cascade={"persist", "remove"})
+     */
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,23 @@ class Profil
     public function setDateNaissance(\DateTimeInterface $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        // set the owning side of the relation if necessary
+        if ($user->getProfil() !== $this) {
+            $user->setProfil($this);
+        }
+
+        $this->user = $user;
 
         return $this;
     }
