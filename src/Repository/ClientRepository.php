@@ -54,11 +54,11 @@ class ClientRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Client
+//    public function recupererClientEnCours($id): ?Client
 //    {
 //        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
+//            ->andWhere('c.id = :id')
+//            ->setParameter('id', $id)
 //            ->getQuery()
 //            ->getOneOrNullResult()
 //        ;
