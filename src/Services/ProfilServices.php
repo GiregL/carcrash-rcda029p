@@ -9,19 +9,23 @@ use Symfony\Component\Security\Core\Security;
 class ProfilServices {
 
     private $security;
+    private $profilRepository;
+    private $clientRepository;
 
-    public function __construct(Security $security) {
+    public function __construct(Security $security, ClientRepository $clientRepository, ProfilRepository $profilRepository) {
         $this->security = $security;
+        $this->profilRepository = $profilRepository;
+        $this->clientRepository = $clientRepository;
     }
 
-    public function recupererProfil(ClientRepository $clientRepository, ProfilRepository $profilRepository)
+    public function recupererProfil()
     {
 
         if ($this->security->isGranted("ROLE_COMMERCIAL")) {
-            return $profilRepository->find($this->security->getUser()->getId());
+            return $this->profilRepository->find($this->security->getUser()->getId());
         } else if ($this->security->isGranted("ROLE_USER")) {
             // pas une erreur, Vscode n'arrive pas a recuperer l'Id du User dans UserInterface
-            return $clientRepository->find($this->security->getUser()->getId()); 
+            return $this->clientRepository->find($this->security->getUser()->getId());
         } else {
             return null;
         }

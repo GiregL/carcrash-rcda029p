@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Hello World !</h1>
+    <h1>Vos locations en cours</h1>
+
+    {% if locations | length == 0 %}
+        <div class="alert alert-info">Vous n'avez pas de locations en cours.</div>
+    {% endif %}
+    <div>
+        {% for location in locations %}
+            {% include 'fragments/_location.html.twig' with {'location': location} %}
+        {% endfor %}
+    </div>
 {% endblock %}
