@@ -57,10 +57,11 @@ class ProfilController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_profil_edit", methods={"GET", "POST"})
+     * @Route("/edit", name="app_profil_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, Profil $profil, ProfilRepository $profilRepository): Response
     {
+        
         $form = $this->createForm(ProfilType::class, $profil);
         $form->handleRequest($request);
 
