@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Location;
+use App\Entity\User;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
+use App\Services\ProfilServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,9 +32,17 @@ class LocationController extends AbstractController
     /**
      * @Route("/new", name="new", methods={"GET", "POST"})
      */
-    public function new(Request $request, LocationRepository $locationRepository): Response
+    public function new(Request $request, LocationRepository $locationRepository, ProfilServices $profilServices): Response
     {
         $location = new Location();
+        $client = $profilServices->recupererProfil();
+        if ($client instanceof Client) {
+            $location->setClient($client);
+        } else {
+            $this->addFlash("danger", "Vous n'êtes pas autorisé à louer une voiture");
+            return $this->redirectToRoute('app_main_index');
+        }
+
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 

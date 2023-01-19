@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Profil;
 use App\Form\ProfilType;
 use App\Repository\ProfilRepository;
+use App\Services\ProfilServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,21 +48,19 @@ class ProfilController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_profil_show", methods={"GET"})
-     */
-    public function show(Profil $profil): Response
-    {
-        return $this->render('profil/show.html.twig', [
-            'profil' => $profil,
-        ]);
-    }
-
-    /**
      * @Route("/edit", name="app_profil_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Profil $profil, ProfilRepository $profilRepository): Response
+    public function edit(Request $request, ProfilRepository $profilRepository, ProfilServices $profilServices): Response
     {
-        
+        $profil = $profilServices->recupererProfil();
+
+        if (!$profil) {
+            return $this->redirectToRoute('app_login');
+        } else {
+            $profil = $profil->getUserProfil();
+        }
+
+
         $form = $this->createForm(ProfilType::class, $profil);
         $form->handleRequest($request);
 
@@ -74,6 +73,16 @@ class ProfilController extends AbstractController
         return $this->renderForm('profil/edit.html.twig', [
             'profil' => $profil,
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="app_profil_show", methods={"GET"})
+     */
+    public function show(Profil $profil): Response
+    {
+        return $this->render('profil/show.html.twig', [
+            'profil' => $profil,
         ]);
     }
 

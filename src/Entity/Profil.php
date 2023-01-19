@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ProfilRepository::class)
  */
-class Profil
+class Profil implements UserProfil
 {
     /**
      * @ORM\Id
@@ -126,6 +126,11 @@ class Profil
 
         $this->user = $user;
 
+        return $this;
+    }
+
+    public function getUserProfil(): Profil
+    {
         return $this;
     }
 }
