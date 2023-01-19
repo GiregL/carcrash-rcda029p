@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Client;
 use App\Entity\Location;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,6 +38,24 @@ class LocationRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function recupererLocationsEnCoursClient(Client $client): array
+    {
+        $now = new \DateTime();
+        $queryBuilder = $this->createQueryBuilder('l');
+        $query = $queryBuilder
+            ->andWhere('l.dateDebut <= :now')
+            ->andWhere('l.dateFin <= :now')
+            ->andWhere('l.client = :client')
+            ->orderBy('l.dateDebut', 'ASC')
+            ->getQuery();
+
+        $query
+            ->setParameter(':now', $now)
+            ->setParameter(':client', $client);
+
+        return $query->getResult();
     }
 
 //    /**
