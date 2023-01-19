@@ -3,11 +3,23 @@
 {% block title %}Edit Profil{% endblock %}
 
 {% block body %}
-    <h1>Edit Profil</h1>
+    <h1>Editer son profil</h1>
 
-    {{ include('profil/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ form_start(form) }}
 
-    <a href="{{ path('app_profil_index') }}">back to list</a>
+        {{ form_row(form.profil.nom) }}
+        {{ form_row(form.profil.prenom) }}
+        {{ form_row(form.profil.adresse) }}
+        {{ form_row(form.profil.telephone) }}
+        {{ form_row(form.profil.dateNaissance) }}
 
-    {{ include('profil/_delete_form.html.twig') }}
+        {{ form_row(form.user.email) }}
+
+        {{ form_row(form.client.numeroPermis) }}
+
+        <button type="submit" class="btn btn-primary">Valider</button>
+        <a class="btn btn-secondary" href="{{ path('app_main_index') }}">Annuler</a>
+
+        {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Profil;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
@@ -24,6 +25,10 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $profil = new Profil();
+        $client = new Client();
+
+        $client->setProfil($profil);
+        $client->setNumeroPermis("");
         $user->setProfil($profil);
 
         $form = $this->createForm(RegistrationFormType::class, ['user' => $user, 'profil' => $profil]);
@@ -39,6 +44,7 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $entityManager->persist($client);
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email

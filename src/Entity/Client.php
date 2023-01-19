@@ -33,7 +33,7 @@ class Client implements UserProfil
     /**
      * @ORM\OneToMany(targetEntity=Location::class, mappedBy="client", orphanRemoval=true)
      */
-    private $locations;
+    private $locations = [];
 
     public function __construct()
     {
