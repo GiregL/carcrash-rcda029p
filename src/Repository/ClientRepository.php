@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Client;
+use App\Entity\Profil;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +40,20 @@ class ClientRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function recupererClientByUserId($id): ?Client
+    {
+        $builder = $this->createQueryBuilder('client');
+        $query = $builder
+            ->select('client')
+            ->leftJoin('client.profil', 'profil')
+            ->leftJoin('profil.user', 'user')
+            ->andWhere('user.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
     }
 
 //    /**

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Profil;
+use App\Form\ProfilClientType;
 use App\Form\ProfilType;
 use App\Repository\ProfilRepository;
 use App\Services\ProfilServices;
@@ -53,26 +54,30 @@ class ProfilController extends AbstractController
     public function edit(Request $request, ProfilRepository $profilRepository, ProfilServices $profilServices): Response
     {
         $profil = $profilServices->recupererProfil();
-
+        $client = null;
         if (!$profil) {
             return $this->redirectToRoute('app_login');
         } else {
+            $client = $profil;
             $profil = $profil->getUserProfil();
         }
 
 
-        $form = $this->createForm(ProfilType::class, $profil);
+        $form = $this->createForm(ProfilClientType::class, [
+            'profil' => $profil,
+            'client' => $client,
+            'user' => $profil->getUser()
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $profilRepository->add($profil, true);
-
-            return $this->redirectToRoute('app_profil_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash("success", "Profil mis à jour.");
+            return $this->redirectToRoute('app_main_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('profil/edit.html.twig', [
-            'profil' => $profil,
-            'form' => $form,
+        return $this->render('profil/edit.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 

@@ -20,12 +20,11 @@ class ProfilServices {
 
     public function recupererProfil()
     {
-
         if ($this->security->isGranted("ROLE_COMMERCIAL")) {
             return $this->profilRepository->find($this->security->getUser()->getId());
         } else if ($this->security->isGranted("ROLE_USER")) {
             // pas une erreur, Vscode n'arrive pas a recuperer l'Id du User dans UserInterface
-            return $this->clientRepository->find($this->security->getUser()->getId());
+            return $this->clientRepository->recupererClientByUserId($this->security->getUser()->getId());
         } else {
             return null;
         }
