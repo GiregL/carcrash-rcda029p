@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Location;
-use App\Entity\User;
 use App\Form\LocationType;
 use App\Repository\LocationRepository;
 use App\Services\ProfilServices;
@@ -35,7 +34,10 @@ class LocationController extends AbstractController
     public function new(Request $request, LocationRepository $locationRepository, ProfilServices $profilServices): Response
     {
         $location = new Location();
+
         $client = $profilServices->recupererProfil();
+        
+
         if ($client instanceof Client) {
             $location->setClient($client);
         } else {

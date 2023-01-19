@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Client;
 use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -19,8 +20,12 @@ class LocationType extends AbstractType
             ->add('dateFin', DateType::class, [
                 'widget' => 'single_text'
             ])
-            ->add('client')
-            ->add('voiture')
+            ->add('client', ClientType::class,[
+                "label" => false,
+                "disabled" => true,
+                'data_class'=>Client::class
+            ])
+            // ->add('voiture')
         ;
     }
 

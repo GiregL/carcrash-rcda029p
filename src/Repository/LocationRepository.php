@@ -46,7 +46,7 @@ class LocationRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('l');
         $query = $queryBuilder
             ->andWhere('l.dateDebut <= :now')
-            ->andWhere('l.dateFin <= :now')
+            ->andWhere('l.dateFin >= :now')
             ->andWhere('l.client = :client')
             ->orderBy('l.dateDebut', 'ASC')
             ->getQuery();
